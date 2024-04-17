@@ -1,0 +1,22 @@
+
+<!-- <div>
+  <textarea name="" id="" cols="50" rows="5"></textarea>
+  <button>Submit</button>
+</div> -->
+
+<div class="container">
+  <form [formGroup]="registerForm" (ngSubmit)="submitPublications()">
+    <div class="form-group">
+        <!-- <label for="content">Name</label> -->
+        <!-- Remplacez l'input par un textarea -->
+        <textarea class="form-control" id="content" formControlName="content"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Submit</button>
+  </form>
+</div>
+
+<div *ngFor="let publication of publications">
+  <p>{{ publication.content }}</p>
+  <p>{{ publication.likes }}</p>
+  <p>{{ publication.dislikes }}</p>
+</div>

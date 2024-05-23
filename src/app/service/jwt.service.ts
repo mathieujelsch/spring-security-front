@@ -37,6 +37,14 @@ export class JwtService {
     })
   }
 
+  displayMessage(): boolean {
+    const jwtToken = localStorage.getItem('jwt');
+    if (jwtToken === null) {
+      return true;
+    }
+    return false;
+  }
+
   private createAuhtorizationHeader() {
     const jwtToken = localStorage.getItem('jwt');
     if (jwtToken) {

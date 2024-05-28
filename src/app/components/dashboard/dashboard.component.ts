@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { JwtService } from '../../service/jwt.service';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -38,10 +38,23 @@ export class DashboardComponent {
   }
 
   submitPublications() {
-    this.service.login(this.registerForm.value).subscribe(
+    this.service.createPublications(this.registerForm.value).subscribe(
       (response) => {
         console.log(response);
       }
     )
+  }
+
+  hasToken() {
+    const jwtToken = localStorage.getItem('jwt');
+    if (jwtToken) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  onSubmit() {
+
   }
 }

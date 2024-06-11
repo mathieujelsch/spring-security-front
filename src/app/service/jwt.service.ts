@@ -31,6 +31,12 @@ export class JwtService {
     })
   }
 
+  displayMessages(): Observable<any>{
+    return this.http.get(BASE_URL + 'publications/messages', {
+      headers: this.createAuhtorizationHeader()
+    })
+  }
+
   createPublications(publicationRequest:any): Observable<any>{
     return this.http.post(BASE_URL + 'publications', publicationRequest, {
       headers: this.createAuhtorizationHeader()

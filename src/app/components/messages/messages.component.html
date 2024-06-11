@@ -1,0 +1,16 @@
+<div *ngIf="isConnected()">
+   <div *ngFor="let publication of publications">
+        <p>{{ publication.content }}</p>
+        <p>{{ publication.likes }}</p>
+        <p>{{ publication.dislikes }}</p>
+    </div> 
+</div>
+
+
+<div *ngIf="!isConnected()">
+    <h1>You must be connected to access to your messages ! </h1>
+</div>
+
+<div *ngIf="publications.length === 0 && isConnected()">
+    <h1>Vous n'avez pas de publications</h1>
+</div>

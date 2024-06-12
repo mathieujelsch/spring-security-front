@@ -15,8 +15,22 @@
   </form>
 </div>
 
-<div *ngFor="let publication of publications">
-  <p>{{ publication.content }}</p>
-  <p>{{ publication.likes }}</p>
-  <p>{{ publication.dislikes }}</p>
+<div class="global">
+  <div class="card-container" *ngFor="let publication of publications">
+    <p>{{ publication.content }}</p>
+    <div class="like-cont">
+      <div class="pr">
+        <a >
+          <img class="imgg" src="assets/images/like.png">
+      </a>
+        <p>{{ publication.likes }}</p>
+      </div>
+      
+      <div>
+        <a href=""><img class="imgg" src="assets/images/dislike.png"></a>
+        <p>{{ publication.dislikes }}</p>
+      </div>
+    </div>
+  </div>
 </div>
+

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -35,6 +35,16 @@ export class JwtService {
     return this.http.get(BASE_URL + 'publications/messages', {
       headers: this.createAuhtorizationHeader()
     })
+  }
+
+  toggleLike(publicationId: number, customerId: number): Observable<any> {
+    const params = new HttpParams()
+      .set('customerId', customerId.toString());
+
+    return this.http.post(BASE_URL + `publications/${publicationId}/like`, null, {
+      params,
+      headers: this.createAuhtorizationHeader()
+    });
   }
 
   createPublications(publicationRequest:any): Observable<any>{

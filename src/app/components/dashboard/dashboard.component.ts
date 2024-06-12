@@ -45,6 +45,28 @@ export class DashboardComponent {
     )
   }
 
+  // likePublication(publicationId: number) {
+  //   this.service.likePublication(publicationId).subscribe(
+  //     response => {
+  //       console.log('Like added successfully', response);
+  //       // Actualisez l'affichage ou effectuez d'autres actions nécessaires
+  //     }
+  //   ) 
+  // }
+
+  likePublication(publicationId: number, customerId: number): void {
+    this.service.toggleLike(publicationId, customerId).subscribe(
+      response => {
+        console.log('Like toggled successfully', response);
+        // Handle successful response, perhaps update the UI
+      },
+      error => {
+        console.error('Error toggling like', error);
+        // Handle error response
+      }
+    );
+  }
+
   hasToken() {
     const jwtToken = localStorage.getItem('jwt');
     if (jwtToken) {

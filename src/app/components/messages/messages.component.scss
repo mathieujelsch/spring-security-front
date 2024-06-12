@@ -1,0 +1,25 @@
+.card-container {
+    border: 1px solid black;
+    height: 90px;
+    width: 500px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 100px;
+    margin-right: 100px;
+    background-color: aquamarine;
+}
+
+.like-cont {
+    display: flex;
+    // justify-content: center;
+   
+}
+
+.imgg {
+    width: 20px;
+    height: 20px;
+}
+
+.pr {
+    padding-right: 20px;
+}

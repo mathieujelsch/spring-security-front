@@ -39,4 +39,16 @@ export class MessagesComponent {
       return false;
     }
   }
+
+  deletePublication(publicationId: number): void {
+    this.service.deletePublication(publicationId).subscribe(
+      () => {
+        console.log('Publication deleted successfully');
+        this.displayMessages(); // Refresh the list after deletion
+      },
+      (error) => {
+        console.error('Error deleting publication', error);
+      }
+    );
+  }
 }

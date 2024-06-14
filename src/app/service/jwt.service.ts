@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 
 const BASE_URL = ["http://localhost:8080/"]
 
@@ -37,15 +37,57 @@ export class JwtService {
     })
   }
 
-  toggleLike(publicationId: number, customerId: number): Observable<any> {
-    const params = new HttpParams()
-      .set('customerId', customerId.toString());
+  getCustomerIdFromToken(): string | null {
+    const jwtToken = localStorage.getItem('jwt');
+    if (jwtToken) {
+      const jwtPayload = jwtToken.split('.')[1]; // Récupère la partie du payload du JWT
+      const decodedPayload = atob(jwtPayload); // Décodage du base64
+      const payloadObj = JSON.parse(decodedPayload); // Conversion en objet JSON
 
-    return this.http.post(BASE_URL + `publications/${publicationId}/like`, null, {
-      params,
+      return payloadObj.customerId; // Renvoie customerId du payload
+    }
+    return null;
+  }
+
+  deletePublication(publicationId: number): Observable<void> {
+    return this.http.delete<void>(BASE_URL + `publications/${publicationId}`, {
       headers: this.createAuhtorizationHeader()
     });
   }
+
+  toggleLike(publicationId: number): Observable<any> {
+    const customerId = this.getCustomerIdFromToken();
+    if (customerId) {
+      const params = new HttpParams()
+        .set('customerId', customerId);
+
+      return this.http.post(BASE_URL + `publications/${publicationId}/like`, null, {
+        params,
+        headers: this.createAuhtorizationHeader()
+      });
+    } else {
+      console.error('User is not logged in or customerId is missing in JWT');
+      return new Observable(); // Gérer le cas où l'utilisateur n'est pas connecté
+    }
+  }
+
+  toggleDislike(publicationId: number): Observable<any> {
+    const customerId = this.getCustomerIdFromToken();
+    if (customerId) {
+      const params = new HttpParams()
+        .set('customerId', customerId);
+
+      return this.http.post(BASE_URL + `publications/${publicationId}/dislike`, null, {
+        params,
+        headers: this.createAuhtorizationHeader()
+      });
+    } else {
+      console.error('User is not logged in or customerId is missing in JWT');
+      return new Observable(); // Gérer le cas où l'utilisateur n'est pas connecté
+    }
+  }
+
+
 
   createPublications(publicationRequest:any): Observable<any>{
     return this.http.post(BASE_URL + 'publications', publicationRequest, {

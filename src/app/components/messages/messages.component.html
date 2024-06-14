@@ -12,6 +12,9 @@
               <a ><img class="imgg" src="assets/images/dislike.png"></a>
               <p>{{ publication.dislikes }}</p>
             </div>
+             <div>
+        <button (click)="deletePublication(publication.id)">X</button>
+      </div>
           </div>
         </div>
       </div>

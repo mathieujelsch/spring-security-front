@@ -1,14 +1,7 @@
 
-<!-- <div>
-  <textarea name="" id="" cols="50" rows="5"></textarea>
-  <button>Submit</button>
-</div> -->
-
 <div class="container">
   <form [formGroup]="registerForm" (ngSubmit)="submitPublications()">
     <div class="form-group">
-        <!-- <label for="content">Name</label> -->
-        <!-- Remplacez l'input par un textarea -->
         <textarea class="form-control" id="content" formControlName="content"></textarea>
     </div>
     <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid || !hasToken()">Submit</button>
@@ -20,16 +13,21 @@
     <p>{{ publication.content }}</p>
     <div class="like-cont">
       <div class="pr">
-        <a >
+        <!-- <a >
           <img class="imgg" src="assets/images/like.png">
-      </a>
+      </a> -->
+      <button (click)="toggleLike(publication.id)">Like</button>
         <p>{{ publication.likes }}</p>
       </div>
       
       <div>
-        <a href=""><img class="imgg" src="assets/images/dislike.png"></a>
+        <!-- <a href=""><img class="imgg" src="assets/images/dislike.png"></a> -->
+        <button (click)="toggleDislike(publication.id)">Dislike</button>
         <p>{{ publication.dislikes }}</p>
       </div>
+      <!-- <div>
+        <button (click)="deletePublication(publication.id)">X</button>
+      </div> -->
     </div>
   </div>
 </div>

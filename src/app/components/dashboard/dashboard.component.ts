@@ -28,6 +28,25 @@ export class DashboardComponent {
     })
   }
 
+  toggleLike(publicationId: number) {
+    this.service.toggleLike(publicationId).subscribe(updatedPublication => {
+      const publication = this.publications.find(p => p.id === publicationId);
+      if (publication) {
+        publication.likes = updatedPublication.likes;
+      }
+    });
+  }
+
+  toggleDislike(publicationId: number) {
+    this.service.toggleDislike(publicationId).subscribe(updatedPublication => {
+      const publication = this.publications.find(p => p.id === publicationId);
+      if (publication) {
+        publication.dislikes = updatedPublication.dislikes;
+      }
+    });
+  }
+
+
   displayPublications() {
     this.service.displayPublications().subscribe(
       (response) => {
@@ -38,33 +57,15 @@ export class DashboardComponent {
   }
 
   submitPublications() {
-    this.service.createPublications(this.registerForm.value).subscribe(
-      (response) => {
-        console.log(response);
-      }
-    )
-  }
-
-  // likePublication(publicationId: number) {
-  //   this.service.likePublication(publicationId).subscribe(
-  //     response => {
-  //       console.log('Like added successfully', response);
-  //       // Actualisez l'affichage ou effectuez d'autres actions nécessaires
-  //     }
-  //   ) 
-  // }
-
-  likePublication(publicationId: number, customerId: number): void {
-    this.service.toggleLike(publicationId, customerId).subscribe(
-      response => {
-        console.log('Like toggled successfully', response);
-        // Handle successful response, perhaps update the UI
-      },
-      error => {
-        console.error('Error toggling like', error);
-        // Handle error response
-      }
-    );
+    if (this.registerForm.valid) {
+      this.service.createPublications(this.registerForm.value).subscribe(
+        (response) => {
+          console.log(response);
+          this.publications.unshift(response); // Ajoute la nouvelle publication en tête de liste
+          this.registerForm.reset(); // Réinitialise le formulaire
+        }
+      )
+    }
   }
 
   hasToken() {

@@ -1,24 +1,34 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { JwtService } from '../../service/jwt.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss'
 })
 export class MessagesComponent {
 
   publications: any[] = [];
+  registerForm!: FormGroup;
+  registerForms: FormGroup[] = [];
+  toggle: boolean = false;
+  editMode: boolean[] = [];
 
   constructor(
     private service: JwtService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit() {
     this.displayMessages();
+
+    this.registerForm = this.fb.group({
+      content: ['', Validators.required]
+    })
   }
 
   displayMessages() {
@@ -26,8 +36,18 @@ export class MessagesComponent {
       (response) => {
         console.log(response);
         this.publications = response;
+        this.initializeForms();
       }
     )
+  }
+
+  initializeForms() {
+    this.publications.forEach((publication, index) => {
+      this.registerForms[index] = this.fb.group({
+        content: [publication.content, Validators.required]
+      });
+      this.editMode[index] = false;
+    });
   }
 
   isConnected(): boolean {
@@ -50,5 +70,22 @@ export class MessagesComponent {
         console.error('Error deleting publication', error);
       }
     );
+  }
+
+  updatePublications(publicationId: number, index: number) {
+    if (this.registerForms[index].valid) {
+      this.service.updatePublication(publicationId, this.registerForms[index].value).subscribe(
+        (response) => {
+          console.log(response);
+          this.publications[index] = response; // Update the publication in the list
+          this.editMode[index] = false; // Exit edit mode
+        }
+      );
+    }
+  }
+
+
+  toggleText(index: number) {
+    this.editMode[index] = !this.editMode[index];
   }
 }

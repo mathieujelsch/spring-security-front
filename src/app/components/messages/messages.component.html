@@ -1,22 +1,33 @@
 <div *ngIf="isConnected()">
     <div class="global">
-        <div class="card-container" *ngFor="let publication of publications">
-          <p>{{ publication.content }}</p>
-          <div class="like-cont">
-            <div class="pr">
-              <a ><img class="imgg" src="assets/images/like.png"></a>
-              <p>{{ publication.likes }}</p>
+        <div class="card-container" *ngFor="let publication of publications; let i = index">
+          <form [formGroup]="registerForms[i]">
+            <p *ngIf="!editMode[i]">{{ publication.content }}</p>
+
+            <div *ngIf="editMode[i]" class="form-group">
+              <textarea class="form-control" id="content" formControlName="content" [(ngModel)]="publications[i].content"></textarea>
             </div>
-            
-            <div>
-              <a ><img class="imgg" src="assets/images/dislike.png"></a>
-              <p>{{ publication.dislikes }}</p>
+
+            <div class="like-cont">
+              <div class="pr">
+                <a ><img class="imgg" src="assets/images/like.png"></a>
+                <p>{{ publication.likes }}</p>
+              </div>
+              
+              <div>
+                <a ><img class="imgg" src="assets/images/dislike.png"></a>
+                <p>{{ publication.dislikes }}</p>
+              </div>
+
+              <div>
+                <button (click)="deletePublication(publication.id)">X</button>
+                <button *ngIf="!editMode[i]" (click)="toggleText(i)">Update</button>
+                <button *ngIf="editMode[i]" (click)="updatePublications(publication.id, i)">Save</button>
+              </div>
             </div>
-             <div>
-        <button (click)="deletePublication(publication.id)">X</button>
-      </div>
-          </div>
+          </form>
         </div>
+        
       </div>
 </div>
 

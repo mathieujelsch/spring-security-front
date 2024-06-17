@@ -95,6 +95,12 @@ export class JwtService {
     })
   }
 
+  updatePublication(publicationId: number, publicationRequest:any): Observable<any> {
+    return this.http.put(BASE_URL + `publications/${publicationId}`, publicationRequest, {
+      headers: this.createAuhtorizationHeader()
+    });
+  }
+
   private createAuhtorizationHeader() {
     const jwtToken = localStorage.getItem('jwt');
     if (jwtToken) {

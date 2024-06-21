@@ -1,6 +1,6 @@
 .card-container {
     border: 1px solid black;
-    height: 90px;
+    height: 100%;
     width: 500px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -23,4 +23,12 @@
 
 .pr {
     padding-right: 20px;
+}
+
+.commentaire {
+    background-color: blanchedalmond;
+    padding: 20px;
+    margin: 5px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 }

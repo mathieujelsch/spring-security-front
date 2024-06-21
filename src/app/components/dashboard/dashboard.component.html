@@ -10,25 +10,32 @@
 
 <div class="global">
   <div class="card-container" *ngFor="let publication of publications">
-    <p>{{ publication.content }}</p>
-    <div class="like-cont">
-      <div class="pr">
-        <!-- <a >
-          <img class="imgg" src="assets/images/like.png">
-      </a> -->
-      <button (click)="toggleLike(publication.id)">Like</button>
-        <p>{{ publication.likes }}</p>
+      <p>{{ publication.content }}</p>
+
+      <div class="like-cont">
+        <div class="pr">
+          <button (click)="toggleLike(publication.id)">Like</button>
+          <p>{{ publication.likes }}</p>
+        </div>
+        
+        <div>
+          <button (click)="toggleDislike(publication.id)">Dislike</button>
+          <p>{{ publication.dislikes }}</p>
+        </div>
       </div>
       
-      <div>
-        <!-- <a href=""><img class="imgg" src="assets/images/dislike.png"></a> -->
-        <button (click)="toggleDislike(publication.id)">Dislike</button>
-        <p>{{ publication.dislikes }}</p>
+      <div class="comments">
+        <div class="commentaire" *ngFor="let comment of publication.comments">
+          <p>{{ comment.comment }}</p>
+        </div>
+
+        <form [formGroup]="commentForms[publication.id]" (ngSubmit)="submitComment(publication.id)">
+          <div class="form-group">
+            <input class="form-control" formControlName="comment" placeholder="Add a comment" />
+          </div>
+          <button type="submit" class="btn btn-primary" [disabled]="commentForms[publication.id].invalid">Comment</button>
+        </form>
       </div>
-      <!-- <div>
-        <button (click)="deletePublication(publication.id)">X</button>
-      </div> -->
-    </div>
   </div>
 </div>
 

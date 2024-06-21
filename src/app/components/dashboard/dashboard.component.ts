@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 export class DashboardComponent {
 
   publications: any[] = [];
+  commentForms: { [key: number]: FormGroup } = {};
   registerForm!: FormGroup;
 
   constructor(
@@ -52,9 +53,27 @@ export class DashboardComponent {
       (response) => {
         console.log(response);
         this.publications = response;
+        this.initializeCommentForms();
+
+        this.publications.forEach(publication => {
+        this.service.getComments(publication.id).subscribe(
+          (comments) => {
+            publication.comments = comments;
+          }
+        );
+      });
       }
     )
   }
+
+  initializeCommentForms() {
+    this.publications.forEach(publication => {
+      this.commentForms[publication.id] = this.fb.group({
+        comment: ['', Validators.required]
+      });
+    });
+  }
+
 
   submitPublications() {
     if (this.registerForm.valid) {
@@ -63,10 +82,30 @@ export class DashboardComponent {
           console.log(response);
           this.publications.unshift(response); // Ajoute la nouvelle publication en tête de liste
           this.registerForm.reset(); // Réinitialise le formulaire
+          this.commentForms[response.id] = this.fb.group({
+            comment: ['', Validators.required]
+          });
         }
       )
     }
   }
+
+  submitComment(publicationId: number) {
+    const commentForm = this.commentForms[publicationId];
+    if (commentForm.valid) {
+      this.service.commentPub(publicationId, commentForm.value).subscribe(
+        (response) => {
+          console.log(response);
+          const publication = this.publications.find(p => p.id === publicationId);
+          if (publication) {
+            publication.comments = publication.comments.concat(response.comments);
+            commentForm.reset();
+          }
+        }
+      )
+    }
+  }
+
 
   hasToken() {
     const jwtToken = localStorage.getItem('jwt');

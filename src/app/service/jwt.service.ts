@@ -31,6 +31,12 @@ export class JwtService {
     })
   }
 
+  getComments(publicationId: number): Observable<any> {
+    return this.http.get(BASE_URL + `publications/${publicationId}/comments`, {
+      headers: this.createAuhtorizationHeader()
+    });
+  }
+
   displayMessages(): Observable<any>{
     return this.http.get(BASE_URL + 'publications/messages', {
       headers: this.createAuhtorizationHeader()
@@ -88,7 +94,6 @@ export class JwtService {
   }
 
 
-
   createPublications(publicationRequest:any): Observable<any>{
     return this.http.post(BASE_URL + 'publications', publicationRequest, {
       headers: this.createAuhtorizationHeader()
@@ -99,6 +104,22 @@ export class JwtService {
     return this.http.put(BASE_URL + `publications/${publicationId}`, publicationRequest, {
       headers: this.createAuhtorizationHeader()
     });
+  }
+
+  commentPub(publicationId: number, publicationRequest:any): Observable<any> {
+    const customerId = this.getCustomerIdFromToken();
+    if (customerId) {
+      const params = new HttpParams()
+        .set('customerId', customerId);
+
+      return this.http.post(BASE_URL + `publications/${publicationId}/comment`, publicationRequest, {
+        params,
+        headers: this.createAuhtorizationHeader()
+      });
+    } else {
+      console.error('User is not logged in or customerId is missing in JWT');
+      return new Observable(); // Gérer le cas où l'utilisateur n'est pas connecté
+    }
   }
 
   private createAuhtorizationHeader() {

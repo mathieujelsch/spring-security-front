@@ -61,6 +61,22 @@ export class JwtService {
     });
   }
 
+  toggleLikeComment(commentId: number): Observable<any> {
+    const customerId = this.getCustomerIdFromToken();
+    if (customerId) {
+      const params = new HttpParams()
+        .set('customerId', customerId);
+
+      return this.http.post(BASE_URL + `comments/${commentId}/like`, null, {
+        params,
+        headers: this.createAuhtorizationHeader()
+      });
+    } else {
+      console.error('User is not logged in or customerId is missing in JWT');
+      return new Observable(); // Gérer le cas où l'utilisateur n'est pas connecté
+    }
+  }
+
   toggleLike(publicationId: number): Observable<any> {
     const customerId = this.getCustomerIdFromToken();
     if (customerId) {

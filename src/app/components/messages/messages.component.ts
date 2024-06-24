@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { JwtService } from '../../service/jwt.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-messages',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatProgressSpinnerModule],
   templateUrl: './messages.component.html',
   styleUrl: './messages.component.scss'
 })
@@ -17,6 +18,7 @@ export class MessagesComponent {
   registerForms: FormGroup[] = [];
   toggle: boolean = false;
   editMode: boolean[] = [];
+  loading: boolean = true;
 
   constructor(
     private service: JwtService,
@@ -37,6 +39,13 @@ export class MessagesComponent {
         console.log(response);
         this.publications = response;
         this.initializeForms();
+        setTimeout(() => {
+          this.loading = false;
+        }, 1500);
+      },
+      (error) => {
+        console.error('Error fetching publications', error);
+        this.loading = false; // Arrêter le chargement en cas d'erreur
       }
     )
   }

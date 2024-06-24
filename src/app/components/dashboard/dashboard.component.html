@@ -27,6 +27,11 @@
       <div class="comments">
         <div class="commentaire" *ngFor="let comment of publication.comments">
           <p>{{ comment.comment }}</p>
+
+          <div class="pr disp">
+            <button (click)="toggleLikeComment(comment.id)">Like</button>
+            <p>{{ comment.likes }}</p>
+          </div>
         </div>
 
         <form [formGroup]="commentForms[publication.id]" (ngSubmit)="submitComment(publication.id)">

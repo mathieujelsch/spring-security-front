@@ -13,6 +13,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 export class DashboardComponent {
 
   publications: any[] = [];
+  comments: any[] = [];
   commentForms: { [key: number]: FormGroup } = {};
   registerForm!: FormGroup;
 
@@ -27,6 +28,17 @@ export class DashboardComponent {
     this.registerForm = this.fb.group({
       content: ['', Validators.required]
     })
+  }
+
+  toggleLikeComment(commentId: number) {
+    this.service.toggleLikeComment(commentId).subscribe(updatedComment => {
+      this.publications.forEach(publication => {
+        const comment = publication.comments.find((c: { id: number; }) => c.id === commentId);
+        if (comment) {
+          comment.likes = updatedComment.likes;
+        }
+      });
+    });
   }
 
   toggleLike(publicationId: number) {

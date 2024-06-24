@@ -1,5 +1,11 @@
 <div *ngIf="isConnected()">
     <div class="global">
+      <div *ngIf="loading" class="loader-container">
+        <mat-spinner></mat-spinner> <!-- Composant de chargement -->
+      </div>
+      <div *ngIf="!loading && publications.length === 0">
+        <h1>Vous n'avez pas de publications</h1>
+      </div>
         <div class="card-container" *ngFor="let publication of publications; let i = index">
           <form [formGroup]="registerForms[i]">
             <p *ngIf="!editMode[i]">{{ publication.content }}</p>
@@ -36,6 +42,6 @@
     <h1>You must be connected to access to your messages ! </h1>
 </div>
 
-<div *ngIf="publications.length === 0 && isConnected()">
+<!-- <div *ngIf="publications.length === 0 && isConnected()">
     <h1>Vous n'avez pas de publications</h1>
-</div>
+</div> -->

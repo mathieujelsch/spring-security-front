@@ -61,6 +61,12 @@ export class JwtService {
     });
   }
 
+  deleteComment(commentId: number): Observable<void> {
+    return this.http.delete<void>(BASE_URL + `comments/${commentId}`, {
+      headers: this.createAuhtorizationHeader()
+    });
+  }
+
   toggleLikeComment(commentId: number): Observable<any> {
     const customerId = this.getCustomerIdFromToken();
     if (customerId) {

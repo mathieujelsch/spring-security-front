@@ -24,7 +24,7 @@ export class DashboardComponent {
 
   ngOnInit() {
     this.displayPublications();
-
+    
     this.registerForm = this.fb.group({
       content: ['', Validators.required]
     })
@@ -68,12 +68,12 @@ export class DashboardComponent {
         this.initializeCommentForms();
 
         this.publications.forEach(publication => {
-        this.service.getComments(publication.id).subscribe(
-          (comments) => {
-            publication.comments = comments;
-          }
-        );
-      });
+          this.service.getComments(publication.id).subscribe(
+            (comments) => {
+              publication.comments = comments;
+            }
+          );
+        });
       }
     )
   }
@@ -100,6 +100,49 @@ export class DashboardComponent {
         }
       )
     }
+  }
+
+  deleteComment(commentId: number): any {
+    this.service.deleteComment(commentId).subscribe(
+      () => {
+        console.log('Publication deleted successfully');
+
+        this.publications.forEach(publication => {
+          const index = publication.comments.findIndex((c: { id: number }) => c.id === commentId);
+          if (index !== -1) {
+            publication.comments.splice(index, 1);
+          }
+        });
+      },
+      (error) => {
+        console.error('Error deleting publication', error);
+      }
+    );
+  }
+
+  getCustomerIdFromToken(): string | null {
+    const jwtToken = localStorage.getItem('jwt');
+    if (jwtToken) {
+      const jwtPayload = jwtToken.split('.')[1]; // Récupère la partie du payload du JWT
+      const decodedPayload = atob(jwtPayload); // Décodage du base64
+      const payloadObj = JSON.parse(decodedPayload); // Conversion en objet JSON
+
+      return payloadObj.customerId; // Renvoie customerId du payload
+    }
+    return null;
+  }
+
+  isCommentOfUser(commentId: number): boolean {
+    const customerIdConnected = this.getCustomerIdFromToken();
+    
+    for (const publication of this.publications) {
+      const comment = publication.comments.find((c: { id: number; customerId: string }) => c.id === commentId);
+      if (comment) {
+        return comment.customerId == customerIdConnected;
+      }
+    }
+    
+    return false;
   }
 
   submitComment(publicationId: number) {

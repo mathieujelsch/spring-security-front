@@ -41,7 +41,7 @@ export class MessagesComponent {
         this.initializeForms();
         setTimeout(() => {
           this.loading = false;
-        }, 1500);
+        }, 1000);
       },
       (error) => {
         console.error('Error fetching publications', error);

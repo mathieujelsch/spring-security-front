@@ -27,6 +27,7 @@
       <div class="comments">
         <div class="commentaire" *ngFor="let comment of publication.comments">
           <p>{{ comment.comment }}</p>
+          <button *ngIf="isCommentOfUser(comment.id)" (click)="deleteComment(comment.id)">Effacer Commentaire</button>
 
           <div class="pr disp">
             <button (click)="toggleLikeComment(comment.id)">Like</button>

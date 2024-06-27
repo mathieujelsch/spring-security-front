@@ -85,7 +85,8 @@ export class MessagesComponent {
     if (this.registerForms[index].valid) {
       this.service.updatePublication(publicationId, this.registerForms[index].value).subscribe(
         (response) => {
-          console.log(response);
+          console.log("HEYYYYYYYY" + response);
+
           this.publications[index] = response; // Update the publication in the list
           this.editMode[index] = false; // Exit edit mode
         }

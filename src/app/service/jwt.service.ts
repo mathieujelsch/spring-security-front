@@ -128,6 +128,12 @@ export class JwtService {
     });
   }
 
+  updateComment(commentId: number, publicationRequest:any): Observable<any> {
+    return this.http.put(BASE_URL + `comments/${commentId}`, publicationRequest, {
+      headers: this.createAuhtorizationHeader()
+    });
+  }
+
   commentPub(publicationId: number, publicationRequest:any): Observable<any> {
     const customerId = this.getCustomerIdFromToken();
     if (customerId) {

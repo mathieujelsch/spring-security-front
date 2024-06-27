@@ -25,14 +25,26 @@
       </div>
       
       <div class="comments">
-        <div class="commentaire" *ngFor="let comment of publication.comments">
-          <p>{{ comment.comment }}</p>
-          <button *ngIf="isCommentOfUser(comment.id)" (click)="deleteComment(comment.id)">Effacer Commentaire</button>
+        <div class="commentaire" *ngFor="let comment of publication.comments; let i = index">
+          <form [formGroup]="registerForms[comment.id]">
+            <p *ngIf="!editMode[comment.id]">{{ comment.comment }}</p>
 
-          <div class="pr disp">
-            <button (click)="toggleLikeComment(comment.id)">Like</button>
-            <p>{{ comment.likes }}</p>
-          </div>
+            <div *ngIf="editMode[comment.id]" class="form-group">
+              <textarea class="form-control" id="updatecomment" formControlName="comment"></textarea>
+            </div>
+
+            <div *ngIf="isCommentOfUser(comment.id)" >
+              <button (click)="deleteComment(comment.id)">Effacer Commentaire</button>
+              <button *ngIf="!editMode[comment.id]" (click)="toggleText(comment.id)">Update</button>
+              <button *ngIf="editMode[comment.id]" (click)="updateComment(comment.id)">Save</button>
+            </div>
+            
+
+            <div class="pr disp">
+              <button (click)="toggleLikeComment(comment.id)">Like</button>
+              <p>{{ comment.likes }}</p>
+            </div>
+          </form>
         </div>
 
         <form [formGroup]="commentForms[publication.id]" (ngSubmit)="submitComment(publication.id)">

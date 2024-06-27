@@ -16,6 +16,8 @@ export class DashboardComponent {
   comments: any[] = [];
   commentForms: { [key: number]: FormGroup } = {};
   registerForm!: FormGroup;
+  registerForms: { [key: number]: FormGroup } = {};
+  editMode: { [key: number]: boolean } = {};
 
   constructor(
     private service: JwtService,
@@ -65,15 +67,16 @@ export class DashboardComponent {
       (response) => {
         console.log(response);
         this.publications = response;
-        this.initializeCommentForms();
 
         this.publications.forEach(publication => {
           this.service.getComments(publication.id).subscribe(
             (comments) => {
               publication.comments = comments;
+              this.initializeForms(publication.comments);
             }
           );
         });
+        this.initializeCommentForms();
       }
     )
   }
@@ -83,6 +86,15 @@ export class DashboardComponent {
       this.commentForms[publication.id] = this.fb.group({
         comment: ['', Validators.required]
       });
+    });
+  }
+
+  initializeForms(comments: any[]) {
+    comments.forEach(comment => {
+      this.registerForms[comment.id] = this.fb.group({
+        comment: [comment.comment, Validators.required]
+      });
+      this.editMode[comment.id] = false;
     });
   }
 
@@ -154,11 +166,45 @@ export class DashboardComponent {
           const publication = this.publications.find(p => p.id === publicationId);
           if (publication) {
             publication.comments = publication.comments.concat(response.comments);
+            response.comments.forEach((comment: any) => {
+              this.registerForms[comment.id] = this.fb.group({
+                comment: ['', Validators.required]
+              });
+              this.editMode[comment.id] = false;
+            });
             commentForm.reset();
           }
+          
         }
       )
     }
+  }
+
+  updateComment(commentId: number) {
+    const registerForm = this.registerForms[commentId];
+    
+    if (registerForm.valid) {
+      this.service.updateComment(commentId, registerForm.value).subscribe(
+        (response) => {
+          console.log("HEEYYYYYY111" + response);
+          
+          this.publications.forEach(publication => {
+            const comment = publication.comments.find((c: { id: number; }) => c.id === commentId);
+            if (comment) {
+              comment.comment = registerForm.value.comment; // Update the comment in the UI
+            }
+          });
+          this.toggleText(commentId); // Hide the edit mode
+        },
+        (error) => {
+          console.error('Error updating comment', error);
+        }
+      );
+    }
+  }
+
+  toggleText(index: number) {
+    this.editMode[index] = !this.editMode[index];
   }
 
 
